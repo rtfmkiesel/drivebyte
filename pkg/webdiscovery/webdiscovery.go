@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"drivebyte/pkg/logger"
-	"drivebyte/pkg/options"
+	"github.com/rtfmkiesel/drivebyte/pkg/logger"
+	"github.com/rtfmkiesel/drivebyte/pkg/options"
 )
 
 var (

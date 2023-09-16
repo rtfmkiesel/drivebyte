@@ -7,10 +7,10 @@ import (
 	"path/filepath"
 	"sync"
 
-	"drivebyte/pkg/chromectl"
-	"drivebyte/pkg/logger"
-	"drivebyte/pkg/options"
-	"drivebyte/pkg/webdiscovery"
+	"github.com/rtfmkiesel/drivebyte/pkg/chromectl"
+	"github.com/rtfmkiesel/drivebyte/pkg/logger"
+	"github.com/rtfmkiesel/drivebyte/pkg/options"
+	"github.com/rtfmkiesel/drivebyte/pkg/webdiscovery"
 )
 
 // Urls() is the goroutine for scanning a domain for open web ports and returning URLs to screenshot.

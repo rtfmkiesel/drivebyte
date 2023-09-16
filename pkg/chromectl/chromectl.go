@@ -10,8 +10,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"drivebyte/pkg/logger"
-	"drivebyte/pkg/options"
+	"github.com/rtfmkiesel/drivebyte/pkg/logger"
+	"github.com/rtfmkiesel/drivebyte/pkg/options"
 )
 
 // Browser is a handle to a webbrowser, ready to take screenshots.

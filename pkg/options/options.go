@@ -12,7 +12,7 @@ import (
 	"strconv"
 	"strings"
 
-	"drivebyte/pkg/logger"
+	"github.com/rtfmkiesel/drivebyte/pkg/logger"
 )
 
 var (

@@ -4,10 +4,10 @@ import (
 	"os"
 	"sync"
 
-	"drivebyte/pkg/logger"
-	"drivebyte/pkg/options"
-	"drivebyte/pkg/runner"
-	"drivebyte/pkg/webdiscovery"
+	"github.com/rtfmkiesel/drivebyte/pkg/logger"
+	"github.com/rtfmkiesel/drivebyte/pkg/options"
+	"github.com/rtfmkiesel/drivebyte/pkg/runner"
+	"github.com/rtfmkiesel/drivebyte/pkg/webdiscovery"
 )
 
 func main() {

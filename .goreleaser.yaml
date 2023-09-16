@@ -1,0 +1,37 @@
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: drivebyte
+
+    main: main.go
+    binary: 'drivebyte'
+
+    ldflags:
+      - -s -w
+    env:
+      - CGO_ENABLED=0
+
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+
+    ignore:
+      - goos: linux
+        goarch: arm64
+
+archives:
+- format: zip
+  name_template: >-
+    drivebyte_
+    {{- if eq .Os "darwin" }}macOS_
+    {{- else if eq .Os "windows"}}Windows_
+    {{- else }}{{ .Os }}_{{ end }}{{ .Arch }}
+  files:
+    - "README.md"
+    - "LICENSE"

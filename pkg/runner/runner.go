@@ -4,6 +4,7 @@ package runner
 import (
 	"fmt"
 	"math/rand"
+	"os"
 	"path/filepath"
 	"sync"
 
@@ -36,7 +37,7 @@ func Screenshots(wg *sync.WaitGroup, chanIn <-chan string, opt options.Options) 
 
 	// Set a temp directory
 	if chrome.Opt.TempDir == "" {
-		chrome.Opt.TempDir = fmt.Sprintf("./temp_%s", randString(8))
+		chrome.Opt.TempDir = filepath.Join(os.TempDir(), fmt.Sprintf("drivebyte_%s", randString(8)))
 		chrome.Opt.TempDir, err = filepath.Abs(chrome.Opt.TempDir)
 		if err != nil {
 			logger.Error("getting abosulte path of '%s' failed: '%s'", chrome.Opt.TempDir, err)

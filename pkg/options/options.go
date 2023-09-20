@@ -390,7 +390,7 @@ Options:
     -st, --screen-timeout   <int>       Timeout for taking screenshots in seconds. (default: 10)
     -ph, --pixel-h          <int>       Amount of horizontal pixels for the browser window. (default: 1440)
     -pv, --pixel-v          <int>       Amount of vertical pixels for the browser window. (default: 800)
-    -t, --temp-dir          <string>    Parent directory for browser cache. (default: .)
+    -t, --temp-dir          <string>    Parent directory for browser cache. (default: OSTEMP)
     -ua, --user-agent       <string>    User-Agent for the webbrowser. (default: random)
 
     -w, --workers           <int>       Amount of "threads" aka. browsers open at the same time. (default: 3)

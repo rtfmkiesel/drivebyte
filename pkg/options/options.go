@@ -96,6 +96,10 @@ func Parse() (opt Options, err error) {
 		return opt, err
 	}
 
+	if len(opt.Domains) == 0 {
+		return opt, fmt.Errorf("no valid domains parsed")
+	}
+
 	// Check dirs and set up missing ones
 	err = checkDirs(&opt)
 	if err != nil {
@@ -252,7 +256,7 @@ func parseDomains(flag string) (domains []string, err error) {
 // isDomain() returns true if a domain is a valid domain name
 func isDomain(domain string) bool {
 	// https://github.com/asaskevich/govalidator/blob/master/patterns.go
-	pattern := `^([a-zA-Z0-9_]{1}[a-zA-Z0-9_-]{0,62}){1}(\.[a-zA-Z0-9_]{1}[a-zA-Z0-9_-]{0,62})*[\._]?$`
+	pattern := `(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]`
 	regex := regexp.MustCompile(pattern)
 	return regex.MatchString(domain)
 }

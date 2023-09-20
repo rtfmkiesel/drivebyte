@@ -4,7 +4,6 @@ package webdiscovery
 import (
 	"fmt"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/rtfmkiesel/drivebyte/pkg/logger"
@@ -27,9 +26,9 @@ func Generate(opt options.Options) (urls []string) {
 
 			if port == 80 || port == 443 {
 				// Do not add :80 and :443 since those are the default ports
-				urls = append(urls, fmt.Sprintf("%s://%s", protocol, cleanDomain(domain)))
+				urls = append(urls, fmt.Sprintf("%s://%s", protocol, domain))
 			} else {
-				urls = append(urls, fmt.Sprintf("%s://%s:%d", protocol, cleanDomain(domain), port))
+				urls = append(urls, fmt.Sprintf("%s://%s:%d", protocol, domain, port))
 			}
 		}
 	}
@@ -65,12 +64,4 @@ func isSecurePort(port int) bool {
 	}
 
 	return false
-}
-
-// cleanDomain() will remove http(s):// and the trailing slash from a domain.
-func cleanDomain(domain string) string {
-	domain = strings.TrimPrefix(domain, "http://")
-	domain = strings.TrimPrefix(domain, "https://")
-	domain = strings.TrimSuffix(domain, "/")
-	return domain
 }

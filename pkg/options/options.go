@@ -230,12 +230,12 @@ func parseDomains(flag string) (domains []string, err error) {
 		// Read from stdin
 		scanner := bufio.NewScanner(os.Stdin)
 		for scanner.Scan() {
-			domain := scanner.Text()
+			domain := cleanDomain(scanner.Text())
 			// Check if supplied domain is a valid URL to avoid later errors
-			if !isDomain(domain) {
-				continue
-			} else {
+			if isDomain(domain) {
 				domains = append(domains, domain)
+			} else {
+				continue
 			}
 		}
 
@@ -255,6 +255,14 @@ func isDomain(domain string) bool {
 	pattern := `^([a-zA-Z0-9_]{1}[a-zA-Z0-9_-]{0,62}){1}(\.[a-zA-Z0-9_]{1}[a-zA-Z0-9_-]{0,62})*[\._]?$`
 	regex := regexp.MustCompile(pattern)
 	return regex.MatchString(domain)
+}
+
+// cleanDomain() will remove http(s):// and the trailing slash from a domain.
+func cleanDomain(domain string) string {
+	domain = strings.TrimPrefix(domain, "http://")
+	domain = strings.TrimPrefix(domain, "https://")
+	domain = strings.TrimSuffix(domain, "/")
+	return domain
 }
 
 // checkDirs() will check the paths which the user supplied (browser, output)

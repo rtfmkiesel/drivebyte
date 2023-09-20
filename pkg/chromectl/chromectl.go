@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"time"
 
 	"github.com/rtfmkiesel/drivebyte/pkg/logger"
@@ -92,10 +93,12 @@ func (d *Browser) Screenshot(url string) (imgPath string, err error) {
 	}
 
 	// Chrome saves all screenshots as 0600, be more permissive here
-	err = os.Chmod(imgPath, 0644)
-	if err != nil {
-		// chmod failed
-		return "", fmt.Errorf("setting permissions on screenshot failed: '%s'", err)
+	if runtime.GOOS != "windows" {
+		err = os.Chmod(imgPath, 0644)
+		if err != nil {
+			// chmod failed
+			return "", fmt.Errorf("setting permissions on screenshot failed: '%s'", err)
+		}
 	}
 
 	logger.Success("Screenshot of '%s' successful ", url)

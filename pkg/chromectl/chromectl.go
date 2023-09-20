@@ -175,11 +175,17 @@ func createFilename(s string) string {
 	}
 
 	new := []rune{}
+	underscore := false // To track replacement (no doubles)
+
 	for _, char := range s {
 		if !m[char] {
 			new = append(new, char)
+			underscore = false
 		} else {
-			new = append(new, '_')
+			if !underscore {
+				new = append(new, '_')
+			}
+			underscore = true
 		}
 	}
 

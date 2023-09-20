@@ -311,7 +311,15 @@ func locateBrowser() (browserPath string, err error) {
 			"C:/Program Files (x86)/Chromium/Application/chrome.exe",
 			"C:/Program Files/Microsoft/Edge/Application/msedge.exe",
 			"C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe",
+			"C:/Program Files/BraveSoftware/Brave-Browser/brave.exe",
 		}
+
+		homeDir, err := os.UserHomeDir()
+		if err == nil {
+			browserPaths = append(browserPaths, filepath.Join(homeDir, "AppData", "Local", "Programs", "Opera", "opera.exe"))
+			browserPaths = append(browserPaths, filepath.Join(homeDir, "AppData", "Local", "Programs", "Opera GX", "opera.exe"))
+		}
+
 	case "linux", "openbsd":
 		browserPaths = []string{
 			"chrome",
@@ -326,6 +334,10 @@ func locateBrowser() (browserPath string, err error) {
 			"/usr/bin/chromium-browser",
 			"/snap/bin/chromium",
 			"/data/data/com.termux/files/usr/bin/chromium-browser",
+			"/usr/bin/brave-browser-stable",
+			"/usr/bin/opera",
+			"/usr/bin/opera-beta",
+			"/usr/bin/opera-developer",
 		}
 	case "darwin":
 		browserPaths = []string{
@@ -337,6 +349,10 @@ func locateBrowser() (browserPath string, err error) {
 			"/usr/bin/google-chrome",
 			"/usr/bin/chromium",
 			"/usr/bin/chromium-browser",
+			"/usr/bin/brave-browser-stable",
+			"/usr/bin/opera",
+			"/usr/bin/opera-beta",
+			"/usr/bin/opera-developer",
 		}
 	}
 

@@ -12,11 +12,13 @@ For chaining, `drivebyte` will output successfully screenshotted URLs to `stdout
 drivebyte [OPTIONS]
 
 Examples:
+    drivebyte -u "domain.tld"
+    drivebyte -f domains.txt
     echo "domain.tld" | drivebyte
     cat domains.txt | drivebyte
-    drivebyte -f domains.txt
 
 Options:
+    -u,  --url               <string>    A single domain/URL to enumerate and screenshot
     -f,  --file              <string>    Path to a file containing one URL to screenshot per line
     -o,  --output-dir        <string>    Path to the output folder for screenshots (default: ./screenshots)
     

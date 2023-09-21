@@ -49,10 +49,13 @@ type Options struct {
 
 // Parse() will parse all the command line options and get the Urls from either stdin or the inputfile
 func Parse() (opt Options, err error) {
-	var flagInputfile string // Seperate since this flag is only needed in Parse()
-	var flagPorts string     // Seperate since this flag is only needed in Parse()
+	var flagInputDomain string // Seperate since this flag is only needed in Parse()
+	var flagInputfile string   // Seperate since this flag is only needed in Parse()
+	var flagPorts string       // Seperate since this flag is only needed in Parse()
 
 	// Fun with flags
+	flag.StringVar(&flagInputDomain, "u", "", "")
+	flag.StringVar(&flagInputDomain, "url", "", "")
 	flag.StringVar(&flagInputfile, "f", "", "")
 	flag.StringVar(&flagInputfile, "file", "", "")
 	flag.StringVar(&opt.OutputDir, "o", "./screenshots", "")
@@ -90,14 +93,20 @@ func Parse() (opt Options, err error) {
 		return opt, err
 	}
 
-	// Parse domains via file or stdin
-	opt.Domains, err = parseDomains(flagInputfile)
-	if err != nil {
-		return opt, err
+	if flagInputDomain != "" {
+		if isDomain(flagInputDomain) {
+			opt.Domains = append(opt.Domains, flagInputDomain)
+		}
+	} else {
+		// Parse domains via file or stdin
+		opt.Domains, err = parseDomains(flagInputfile)
+		if err != nil {
+			return opt, err
+		}
 	}
 
 	if len(opt.Domains) == 0 {
-		return opt, fmt.Errorf("no valid domains parsed")
+		return opt, fmt.Errorf("no valid domain(s) parsed")
 	}
 
 	// Check dirs and set up missing ones
@@ -385,11 +394,13 @@ func usage() {
 	fmt.Printf(`drivebyte [OPTIONS]
 
 Examples:
+    drivebyte -u "domain.tld"
+    drivebyte -f domains.txt
     echo "domain.tld" | drivebyte
     cat domains.txt | drivebyte
-    drivebyte -f domains.txt
 
 Options:
+    -u,  --url               <string>    A single domain/URL to enumerate and screenshot
     -f,  --file              <string>    Path to a file containing one URL to screenshot per line
     -o,  --output-dir        <string>    Path to the output folder for screenshots (default: ./screenshots)
 

@@ -23,8 +23,7 @@ type Browser struct {
 // Screenshot() makes a screenshot of the website provided via the "url" parameter.
 // A full URL like 'https://example.com' or 'https://sub.example.com:8443' is required.
 func (d *Browser) Screenshot(url string) (imgPath string, err error) {
-	imgName := createFilename(url) + ".png" // Remove bad characters from the URL to get a valid filename
-	imgPath = tryFilename(filepath.Join(d.Opt.OutputDir, imgName))
+	imgPath = generateFilename(d.Opt.OutputDir, url)
 	logger.Info("Trying to screenshot '%s' to '%s'", url, imgPath)
 
 	args := []string{
@@ -170,12 +169,35 @@ func randomUserAgent() string {
 	return agents[randInt]
 }
 
-// tryFilename() will try if a path already exists and if so append "_N" with N being the first available number
-func tryFilename(filePath string) string {
+// generateFilename() will generate the filename from the URL by sanitizing bad chars and trying until a uniq filename is found
+func generateFilename(dir string, url string) string {
+	// Sanitize filename
+	m := make(map[rune]bool)
+	for _, char := range []rune{'/', '\\', '<', '>', ':', '"', '|', '?', '*'} {
+		m[char] = true
+	}
+
+	safe := []rune{}
+	underscore := false // To track replacement (no double '_')
+
+	for _, char := range url {
+		if !m[char] {
+			safe = append(safe, char)
+			underscore = false
+		} else {
+			if !underscore {
+				safe = append(safe, '_')
+			}
+			underscore = true
+		}
+	}
+	filePath := filepath.Join(dir, string(safe)+".png")
+
+	// Check if file exist
 	_, err := os.Stat(filePath)
 	if err != nil {
 		if os.IsNotExist(err) {
-			// Filename does no exists so return without modification
+			// Filename does no exists
 			return filePath
 		}
 	}
@@ -198,29 +220,4 @@ func tryFilename(filePath string) string {
 			}
 		}
 	}
-}
-
-// createFilename() will remove all chars (runes) from a string that it becomes a valid file name
-func createFilename(s string) string {
-	m := make(map[rune]bool)
-	for _, char := range []rune{'/', '\\', '<', '>', ':', '"', '|', '?', '*'} {
-		m[char] = true
-	}
-
-	new := []rune{}
-	underscore := false // To track replacement (no doubles)
-
-	for _, char := range s {
-		if !m[char] {
-			new = append(new, char)
-			underscore = false
-		} else {
-			if !underscore {
-				new = append(new, '_')
-			}
-			underscore = true
-		}
-	}
-
-	return string(new)
 }

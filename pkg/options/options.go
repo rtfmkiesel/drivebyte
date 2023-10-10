@@ -212,7 +212,7 @@ func parseDomains(flag string) (domains []string, err error) {
 		// Read line by line
 		scanner := bufio.NewScanner(file)
 		for scanner.Scan() {
-			domain := scanner.Text()
+			domain := stripHttp(scanner.Text())
 			// Check if supplied domain is a valid URL to avoid later errors
 			if !isDomain(domain) {
 				logger.Error("ignoring '%s', not a valid URL", domain)
@@ -243,7 +243,7 @@ func parseDomains(flag string) (domains []string, err error) {
 		// Read from stdin
 		scanner := bufio.NewScanner(os.Stdin)
 		for scanner.Scan() {
-			domain := cleanDomain(scanner.Text())
+			domain := stripHttp(scanner.Text())
 			// Check if supplied domain is a valid URL to avoid later errors
 			if isDomain(domain) {
 				domains = append(domains, domain)
@@ -270,8 +270,8 @@ func isDomain(domain string) bool {
 	return regex.MatchString(domain)
 }
 
-// cleanDomain() will remove http(s):// and the trailing slash from a domain.
-func cleanDomain(domain string) string {
+// stripHttp() will remove http(s):// and the trailing slash from a domain.
+func stripHttp(domain string) string {
 	domain = strings.TrimPrefix(domain, "http://")
 	domain = strings.TrimPrefix(domain, "https://")
 	domain = strings.TrimSuffix(domain, "/")

@@ -24,7 +24,7 @@ type Browser struct {
 // A full URL like 'https://example.com' or 'https://sub.example.com:8443' is required.
 func (d *Browser) Screenshot(url string) (imgPath string, err error) {
 	imgName := createFilename(url) + ".png" // Remove bad characters from the URL to get a valid filename
-	imgPath = filepath.Join(d.Opt.OutputDir, imgName)
+	imgPath = tryFilename(filepath.Join(d.Opt.OutputDir, imgName))
 	logger.Info("Trying to screenshot '%s' to '%s'", url, imgPath)
 
 	args := []string{
@@ -168,6 +168,36 @@ func randomUserAgent() string {
 
 	randInt := rand.Intn(len(agents))
 	return agents[randInt]
+}
+
+// tryFilename() will try if a path already exists and if so append "_N" with N being the first available number
+func tryFilename(filePath string) string {
+	_, err := os.Stat(filePath)
+	if err != nil {
+		if os.IsNotExist(err) {
+			// Filename does no exists so return without modification
+			return filePath
+		}
+	}
+
+	baseDir := filepath.Dir(filePath)
+	baseName := filepath.Base(filePath)
+	ext := filepath.Ext(baseName)
+	fileName := baseName[:len(baseName)-len(ext)]
+
+	// Iterate until a filename is found that does not exist
+	for i := 1; ; i++ {
+		newFileName := fmt.Sprintf("%s_%d%s", fileName, i, ext)
+		newPath := filepath.Join(baseDir, newFileName)
+
+		_, err := os.Stat(newPath)
+		if err != nil {
+			if os.IsNotExist(err) {
+				// Filename does no exists, return new name
+				return newPath
+			}
+		}
+	}
 }
 
 // createFilename() will remove all chars (runes) from a string that it becomes a valid file name

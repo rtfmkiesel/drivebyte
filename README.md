@@ -1,7 +1,7 @@
 # drivebyte
-![GitHub](https://img.shields.io/github/license/rtfmkiesel/drivebyte)
+![GitHub Repo stars](https://img.shields.io/github/stars/rtfmkiesel/drivebyte) ![GitHub](https://img.shields.io/github/license/rtfmkiesel/drivebyte)
 
-A *blazingly fast*, cross-os cli tool to discover and take automated screenshots of websites using Chromium-based browsers. This was done with automated content discovery & bug bounty in mind. This was heavily inspired and is basically a minified, zero-dependency version of [michenriksen/aquatone](https://github.com/michenriksen/aquatone). 
+A *blazingly fast*, cross-os cli tool to discover and take automated screenshots of websites using Chromium-based browsers. This was done with automated content discovery & bug bounty in mind. This was heavily inspired and is basically a minified version of [michenriksen/aquatone](https://github.com/michenriksen/aquatone). 
 
 ![](demo.gif)
 
@@ -9,34 +9,30 @@ For chaining, `drivebyte` will output successfully screenshotted URLs to `stdout
 
 ## Usage
 ```
-drivebyte [OPTIONS]
+Usage:
+  drivebyte [flags]
 
-Examples:
-    drivebyte -u "domain.tld"
-    drivebyte -f domains.txt
-    echo "domain.tld" | drivebyte
-    cat domains.txt | drivebyte
+Flags:
+TARGETS:
+   -t, -targets string     /path/to/urls or a single URL
+   -p, -ports string       ports to scan: "FROM-TO" or "min", "default", "large", "max" (default "default")
+   -pt, -port-timeout int  timeout for port checks in seconds (default 10)
+   -w, -workers int        amount of concurrect workers (default 10)
 
-Options:
-    -u,  --url               <string>    A single domain/URL to enumerate and screenshot
-    -f,  --file              <string>    Path to a file containing one URL to screenshot per line
-    -o,  --output-dir        <string>    Path to the output folder for screenshots (default: ./screenshots)
-    
-    -p,  --ports             <string>    Ports to scan: "from-to" or "min", "default", "large", "max"
-    -pt, --port-timeout      <int>       Timeout for port checks in seconds (default: 3)
+BROWSER:
+   -o, -output-dir string        output directory for the screenshots (default "./screenshots")
+   -c, -chrome string            path to the chrome binary
+   -i, -incognito                launch chrome in incognito mode
+   -x, -proxy-url string         proxy url to use
+   -st, -screenshot-timeout int  timeout for the screenshot in seconds (default 10)
+   -ph, -pixel-h int             size of the screenshot in pixels (horizontal) (default 1440)
+   -pv, -pixel-v int             size of the screenshot in pixels (vertical) (default 800)
+   -T, -temp-dir string          directory to store the temporary files
+   -ua, -user-agent string       override the chrome user agent
+   -fg, -foreground              launch chrome in foreground
 
-    -c,  --chrome            <string>    Path to the chrome binary (default: autodetect)
-    -i,  --incognito                     Use incognito mode (default: false)
-    -x,  --proxy-url         <string>    Proxy URL for the webbrowser "http://user:passwd@host:port"
-    -st, --screen-timeout    <int>       Timeout for taking screenshots in seconds (default: 10)
-    -ph, --pixel-h           <int>       Amount of horizontal pixels for the browser window (default: 1440)
-    -pv, --pixel-v           <int>       Amount of vertical pixels for the browser window (default: 800)
-    -t,  --temp-dir          <string>    Parent directory for browser cache (default: OSTEMP)
-    -ua, --user-agent        <string>    User-Agent for the webbrowser (default: random)
-
-    -w,  --workers           <int>       Amount of "threads" aka. browsers open at the same time (default: 3)
-    -v,  --verbose                       Enable verbose output (default: false)
-    -h,  --help                          Prints this text
+OPTIONS:
+   -v, -verbose
 ```
 
 ## Installation
@@ -52,6 +48,9 @@ go install github.com/rtfmkiesel/drivebyte@latest
 ```bash
 git clone https://github.com/rtfmkiesel/drivebyte
 cd drivebyte
+
+make
+# or
 go mod tidy
-go build -ldflags="-s -w" .
+go build -ldflags="-s -w" -o drivebyte .
 ```

@@ -44,7 +44,9 @@ go.work
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/go,visualstudiocode
+
+/drivebyte
+/drivebyte.exe
 /dist
-/temp_*
 /screenshots
 *.txt

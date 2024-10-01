@@ -50,13 +50,13 @@ func GenerateUrls(domains []string, ports []int) (urls []string) {
 		}
 	}
 
-	logger.Info("Generated a total of %d possible URLs for %d domain(s)", len(urls), len(domains))
+	logger.Debug("Generated a total of %d possible URLs for %d domain(s)", len(urls), len(domains))
 	return urls
 }
 
 // IsReachable will test connectivity to a web server via a GET request.
 func IsReachable(url string, timeout int) bool {
-	logger.Info("Checking for website at %s", url)
+	logger.Debug("Checking for website at %s", url)
 
 	httpClient := http.Client{
 		Timeout: time.Duration(timeout) * time.Second,
@@ -68,6 +68,6 @@ func IsReachable(url string, timeout int) bool {
 	}
 	defer response.Body.Close()
 
-	logger.Info("Website found at %s", url)
+	logger.Debug("Website found at %s", url)
 	return true
 }

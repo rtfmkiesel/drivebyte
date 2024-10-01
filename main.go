@@ -2,16 +2,14 @@ package main
 
 import (
 	"sync"
-	"time"
 
-	"github.com/go-rod/rod/lib/proto"
 	"github.com/rtfmkiesel/drivebyte/internal/logger"
 	"github.com/rtfmkiesel/drivebyte/internal/options"
 	"github.com/rtfmkiesel/drivebyte/internal/webdiscovery"
 )
 
 func main() {
-	opt, err := options.ParseCliOptions()
+	opt, screenshoter, err := options.Parse()
 	if err != nil {
 		logger.Fatal(err)
 	}
@@ -40,30 +38,8 @@ func main() {
 			defer wgChrome.Done()
 
 			for url := range toScreenshot {
-				page := opt.Browser.
-					Timeout(time.Duration(opt.ScreenshotTimeout) * time.Second).
-					MustPage(url).
-					MustWaitDOMStable()
-
-				page.MustSetViewport(opt.BrowserSizeH, opt.BrowserSizeV, 1, false)
-
-				screenshotBytes, err := page.Screenshot(true, &proto.PageCaptureScreenshot{
-					Format: proto.PageCaptureScreenshotFormatPng,
-				})
-				if err != nil {
-					logger.ErrorF("Failed to take screenshot of %s: %s", url, err)
-					continue
-				}
-				if err = page.Close(); err != nil {
-					logger.ErrorF("Failed to close page of %s: %s", url, err)
-					continue
-				}
-
-				// To allow for chaining, output the URL to stdout
-				logger.Stdout("%s\n", url)
-
-				if err := opt.SaveScreenshot(url, screenshotBytes); err != nil {
-					logger.ErrorF("Failed to save screenshot of %s: %s", url, err)
+				if err := screenshoter.TakeScreenshot(url); err != nil {
+					logger.Error(err)
 					continue
 				}
 			}
@@ -79,7 +55,7 @@ func main() {
 	close(toScreenshot)
 	wgChrome.Wait()
 
-	if err := opt.Cleanup(); err != nil {
+	if err := screenshoter.Cleanup(); err != nil {
 		logger.Fatal(err)
 	}
 }

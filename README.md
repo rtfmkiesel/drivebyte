@@ -52,5 +52,5 @@ cd drivebyte
 make
 # or
 go mod tidy
-go build -ldflags="-s -w" -o drivebyte .
+go build -ldflags="-s -w" .
 ```

@@ -77,21 +77,21 @@ func NewScreenshoter(opt *Options) (s *Screenshoter, err error) {
 		Set("disable-sync").
 		Set("disable-infobars").
 		Set("disable-notifications").
-		Set("disable-crash-reporter").
-		Set("ignore-certificate-errors")
+		Set("disable-crash-reporter")
 
 	if opt.Incognito {
 		l = l.Set("incognito")
 	}
 	if opt.Proxy != "" {
-		l = l.Set("proxy-server", opt.Proxy)
+		l = l.Proxy(opt.Proxy)
 	}
 	if opt.UserAgent != "" {
 		l = l.Set("user-agent", opt.UserAgent)
 	}
-	if os.Geteuid() == 0 {
-		l = l.Set("no-sandbox") // Is required under linux & root
-	}
+
+	l = l.NoSandbox(os.Geteuid() == 0) // Is required under linux & root
+
+	logger.Debug("Chrome arguments: %#v", l.FormatArgs())
 
 	url, err := l.Launch()
 	if err != nil {
